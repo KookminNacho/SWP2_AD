@@ -33,7 +33,7 @@ class Guess:
         else:
             return False
 
-    def botsword(self, charactors):  #상대(컴퓨터)가 쓸 단어를 선택하는 메소드, 할 수 있는 단어가 없으면 False 리턴
+    def botsword(self, charactors):  # 상대(컴퓨터)가 쓸 단어를 선택하는 메소드, 할 수 있는 단어가 없으면 False 리턴
         charactor = charactors[-1]
         if charactor in self.words:
             number = random.randint(1, len(self.words[charactor]))
@@ -41,10 +41,19 @@ class Guess:
             return botword
         elif charactor not in self.words:
             return False
-        # 준혁아 guess 파일에 게임 처음 시작됬을때 컴퓨터가 제시가는 단어 뽑아주는 메서드 firstword 하나만 더 만들어주라!
 
-    def gamestart(self):
-        random.randint(ord('가'), ord('힣'))
+# 준혁아 guess 파일에 게임 처음 시작됬을때 컴퓨터가 제시가는 단어 뽑아주는 메서드 firstword 하나만 더 만들어주라!
+    def game_start(self):
+        while 1:
+            numb = random.randint(ord('가'), ord('힣'))
+            if chr(numb) in self.words:
+                randnum = random.randint(0, len(self.words[chr(numb)])-1)
+                if len(self.words[chr(numb)][randnum]) > 1:
+                    return self.words[chr(numb)][randnum]
+                else:
+                    pass
+            else:
+                pass
 
 
 # --------------------------------작동 확인 영역----------------------------------
@@ -54,6 +63,7 @@ B = Guess()
 B.test()
 
 testword = "가가린"
+print("시작 단어: ", B.game_start())
 success = B.starts('가')
 seccscs = B.isitin(testword)
 
@@ -61,20 +71,21 @@ starttest = B.starts("가")
 if not starttest:
     print("단어가 없습니다.")
 else:
-    print(starttest)
+    pass
+
 if seccscs is False:
     print("seccscs: 불가능 ㅠ")
 
 else:
-    print(testword)
+    print("isitin 메소드:", testword)
 
 if not success:
     print("success: 불가능 ㅠ")
 else:
     print("success: 가능")
 
-BOTTEST = B.botsword('군귋')
+BOTTEST = B.botsword('군견')
 if BOTTEST is False:
     print("단어가 없습니다")
 elif BOTTEST is not False:
-    print(BOTTEST)
+    print('견으로 시작하는 단어', BOTTEST)
