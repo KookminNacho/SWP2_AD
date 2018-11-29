@@ -1,4 +1,4 @@
-from AD_Project.word import Word
+from Word import Word
 
 import random
 
@@ -41,6 +41,10 @@ class Guess:
             return botword
         elif charactor not in self.words:
             return False
+        # 준혁아 guess 파일에 게임 처음 시작됬을때 컴퓨터가 제시가는 단어 뽑아주는 메서드 firstword 하나만 더 만들어주라!
+
+    def gamestart(self):
+        random.randint(ord('가'), ord('힣'))
 
 
 # --------------------------------작동 확인 영역----------------------------------
