@@ -34,13 +34,20 @@ class EndtoendGame(QWidget):
 
         self.inputword = QLabel('단어입력 : ', self)
 
+        self.lastword = QLabel('이전 단어 : ', self)
+        self.lastword.setFixedHeight(15)
+        self.lastword.setAlignment(Qt.AlignCenter)
+        font2 = self.lastword.font()
+        font2.setPointSize(10)
+        self.lastword.setFont(font2)
+
 
         # QLineEdit
         self.showword = QLineEdit()
         self.showword.setReadOnly(True)
-        font1 = self.showword.font()
-        font1.setPointSize(20)
-        self.showword.setFont(font1)
+        font3 = self.showword.font()
+        font3.setPointSize(20)
+        self.showword.setFont(font3)
         self.showword.setFixedHeight(50)
         self.showword.setFixedWidth(350)
         self.showword.setAlignment(Qt.AlignCenter)
@@ -106,6 +113,7 @@ class EndtoendGame(QWidget):
 
         vbox.addWidget(self.status)
         vbox.addLayout(hbox2)
+        vbox.addWidget(self.lastword)
         vbox.addLayout(hbox1)
         vbox.addWidget(self.character)
         vbox.addLayout(hbox3)
@@ -117,7 +125,7 @@ class EndtoendGame(QWidget):
     def startGame(self):
         firstword = self.guess.game_start()
         self.gameOver = False
-
+        #self.character.setText(self.)
         self.counter = 3
         self.myscore = 0
         self.yourscore = 0
@@ -129,6 +137,7 @@ class EndtoendGame(QWidget):
 
         # 처음 시작할시 컴퓨터가 단어를 제시하도록 하는 부분
         self.showword.setText(firstword)
+        self.guess.what_have_we_done(firstword)
 
         if len(firstword) > 1:
             self.yourscore += len(firstword)*4
@@ -140,40 +149,34 @@ class EndtoendGame(QWidget):
         enterword = self.writeword.text()
         #returnword = ''
         self.writeword.clear()
-
-        if len(enterword) > 1:
-            self.myscore += len(enterword)*4
-
-        self.myrecord.setText(str(self.myscore))
+        #self.lastword.setText('이전 단어 : ', thirdword[0], thirdword[1], thirdword[2])
 
         # 예외처리
         if self.guess.starts(enterword[0]) == False:
+            self.myscore -= len(enterword)*4
             return self.status.setText('존재하지 않는 단어입니다.')
 
         if self.guess.isitin(enterword) == False:
+            self.myscore -= len(enterword) * 4
             return self.status.setText('불가능합니다.')
 
         if self.guess.botsword(enterword) == False:
+            self.myscore -= len(enterword) * 4
             return self.status.setText('존재하지 않는 단어입니다.')
 
-
-        # 예외처리 끝난 후 메인 실행 코드
-
-        # self.status.setText('상대방이 단어를 입력중입니다...')
-        # time.sleep(1)
-        # self.status.setText('상대방이 단어를 입력중입니다....')
-        # time.sleep(2)
-        # self.status.setText('상대방이 단어를 입력중입니다...')
-        # time.sleep(1)
         if len(enterword) > 1:
             self.myscore += len(enterword)*4
         self.myrecord.setText(str(self.myscore))
+        self.guess.what_have_we_done(enterword)
 
+        # 컴퓨터가 새로운 단어를 입력
         self.aiword = self.guess.botsword(enterword)
         self.showword.setText(self.aiword)
 
         if len(self.aiword) > 1:
             self.yourscore += len(self.aiword)*4
+
+        self.guess.what_have_we_done(self.aiword)
 
         self.airecord.setText(str(self.yourscore))
         self.status.setText('당신의 차례입니다.')
