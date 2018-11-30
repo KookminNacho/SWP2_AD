@@ -147,6 +147,7 @@ class EndtoendGame(QWidget):
 
     def pressedEnter(self):
         enterword = self.writeword.text()
+        whowin = 0
         #returnword = ''
         self.writeword.clear()
         #self.lastword.setText('이전 단어 : ', thirdword[0], thirdword[1], thirdword[2])
@@ -154,15 +155,21 @@ class EndtoendGame(QWidget):
         # 예외처리
         if self.guess.starts(enterword[0]) == False:
             self.myscore -= len(enterword)*4
-            return self.status.setText('존재하지 않는 단어입니다.')
+            self.gameOver = True
+            self.status.setText('존재하지 않는 단어입니다.')
 
         if self.guess.isitin(enterword) == False:
             self.myscore -= len(enterword) * 4
-            return self.status.setText('불가능합니다.')
+            self.gameOver = True
+            self.status.setText('불가능합니다.')
 
         if self.guess.botsword(enterword) == False:
             self.myscore -= len(enterword) * 4
-            return self.status.setText('존재하지 않는 단어입니다.')
+            self.gameOver = True
+            self.status.setText('존재하지 않는 단어입니다.')
+
+        if self.gameOver == True:
+            return self.showword.setText('Game Over')
 
         if len(enterword) > 1:
             self.myscore += len(enterword)*4
