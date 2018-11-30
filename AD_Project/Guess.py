@@ -9,7 +9,7 @@ class Guess:
         print("-----------------------------------------------------------")
         self.word = Word()
         self.words = {}  # 단어 dict
-
+        self.thirdword = ['', '', '']
     def test(self):
         self.words = self.word.readingdb()
 
@@ -55,6 +55,10 @@ class Guess:
             else:
                 pass
 
+    def what_have_we_done(self, wordnow): # 사용자가 컴퓨터가 사용한 단어를 받아와 텍스트로 최대 3개까지 출력
+        self.thirdword[2], self.thirdword[1] = self.thirdword[1], self.thirdword[0]
+        self.thirdword[0] = wordnow
+        return wordnow
 
 # --------------------------------작동 확인 영역----------------------------------
 
