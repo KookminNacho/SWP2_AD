@@ -7,20 +7,22 @@ from PyQt5.QtWidgets import QTextEdit, QLineEdit, QToolButton, QLabel
 
 import time
 
-from AD_Project.guess import Guess
+from final.guess import Guess
+
 
 class EndtoendGame(QWidget):
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.guess = Guess()
+        self.guess.test()
 
         self.setGeometry(300, 300, 500, 300)
         self.setWindowTitle('End-TO-End')
 
         # label
 
-        self.status = QLabel("초")
+        self.status = QLabel("")
         self.status.setFixedHeight(30)
         self.status.setAlignment(Qt.AlignCenter)
 
@@ -32,14 +34,17 @@ class EndtoendGame(QWidget):
         self.showword.setReadOnly(True)
         self.showword.setFixedHeight(50)
         self.showword.setFixedWidth(350)
+        self.showword.setAlignment(Qt.AlignCenter)
 
         self.myrecord = QLineEdit()
         self.myrecord.setReadOnly(True)
         self.myrecord.setFixedHeight(30)
+        self.myrecord.setAlignment(Qt.AlignCenter)
 
         self.airecord = QLineEdit()
         self.airecord.setReadOnly(True)
         self.airecord.setFixedHeight(30)
+        self.airecord.setAlignment(Qt.AlignCenter)
 
         self.writeword = QLineEdit()
         self.writeword.setFixedHeight(40)
@@ -95,18 +100,20 @@ class EndtoendGame(QWidget):
     def startGame(self):
         firstword = self.guess.game_start()
         self.gameOver = False
+        self.myscore = 0
+        self.yourscore = 0
+        self.myrecord.setText(str(self.myscore))
+        self.airecord.setText(str(self.yourscore))
 
         self.status.setText('게임을 시작합니다.')
-        self.myrecord = 0
-        self.airecord = 0
-        self.character.setText('')
-        time.sleep(1)
-        self.status.setText('3')
-        time.sleep(1)
-        self.status.setText('2')
-        time.sleep(1)
-        self.status.setText('1')
-        time.sleep(1)
+        # self.character.setText('')
+        # time.sleep(1)
+        # self.status.setText('3')
+        # time.sleep(1)
+        # self.status.setText('2')
+        # time.sleep(1)
+        # self.status.setText('1')
+        # time.sleep(1)
         # 처음 시작할시 컴퓨터가 단어를 제시하도록 하는 부분
         self.showword.setText(firstword)
         self.character.setText('')
@@ -119,7 +126,7 @@ class EndtoendGame(QWidget):
 
         # 예외처리
         if self.guess.isitin(enterword) == False:
-            return self.status.setText('존재하지 않는 단어입니다.')
+            self.status.setText('존재하지 않는 단어입니다.')
 
 
         # 예외처리 끝난 후 메인 실행 코드
@@ -135,9 +142,12 @@ class EndtoendGame(QWidget):
 
 
     # 엔터 입력처리 메서드
-    def keyPressEvent(self, enter):
-        if enter.key() == Qt.Key_Enter:
-            self.pressEnter()
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter:
+            print('Enter')
+            self.pressedEnter()
+        if event.key == Qt.Key_Escape:
+            self.close()
 
 
 if __name__ == '__main__':
