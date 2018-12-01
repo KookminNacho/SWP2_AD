@@ -10,6 +10,7 @@ class Guess:
         self.word = Word()
         self.words = {}  # 단어 dict
         self.thirdword = ['', '', '']
+        self.usedword = []
     def test(self):
         self.words = self.word.readingdb()
 
@@ -38,6 +39,7 @@ class Guess:
         if charactor in self.words:
             number = random.randint(1, len(self.words[charactor]))
             botword = (self.words[charactor])[number]
+            self.usedword += [self.word[charactor][number]]
             return botword
         elif charactor not in self.words:
             return False
@@ -49,6 +51,7 @@ class Guess:
             if chr(numb) in self.words:
                 randnum = random.randint(0, len(self.words[chr(numb)])-1)
                 if len(self.words[chr(numb)][randnum]) > 1:
+                    self.usedword += [self.word[chr(numb)][randnum]]
                     return self.words[chr(numb)][randnum]
                 else:
                     pass
