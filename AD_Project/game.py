@@ -24,13 +24,6 @@ class EndtoendGame(QWidget):
         self.setGeometry(300, 300, 500, 400)
         self.setWindowTitle('End-TO-End')
 
-        # Timer
-        self.settime = 15
-        self.maxtime = 15
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.timeout)
-        self.timer.start(1000)
-
         # label
 
         self.status = QLabel("")
@@ -49,6 +42,15 @@ class EndtoendGame(QWidget):
         font2.setPointSize(10)
         self.lastword.setFont(font2)
 
+        self.showaipoint = QLabel('CPU 점수: ')
+        font3 = self.showaipoint.font()
+        font3.setPointSize(10)
+        self.showaipoint.setFont(font3)
+
+        self.showmypoint = QLabel('내 점수: ')
+        font4 = self.showmypoint.font()
+        font4.setPointSize(10)
+        self.showmypoint.setFont(font2)
 
         # QLineEdit
         self.showword = QLineEdit()
@@ -95,8 +97,10 @@ class EndtoendGame(QWidget):
         # QHbox1
         hbox1 = QHBoxLayout()
         hbox1.addStretch(1)
+        hbox1.addWidget(self.showaipoint)
         hbox1.addWidget(self.airecord)
         hbox1.addStretch(1)
+        hbox1.addWidget(self.showmypoint)
         hbox1.addWidget(self.myrecord)
         hbox1.addStretch(1)
 
@@ -147,6 +151,13 @@ class EndtoendGame(QWidget):
 
 
     def startGame(self):
+        self.settime = 15
+        self.maxtime = 15
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timeout)
+        self.timer.start(1000)
+        self.gameStart = False
+
         self.writeword.setDisabled(True)
         self.character.setText(self.endtoend.text[0])
         self.settime = 4
@@ -195,16 +206,21 @@ class EndtoendGame(QWidget):
             if self.guess.starts(enterword[0]) == False:
                 self.myscore -= len(enterword) * 4
                 self.status.setText('존재하지 않는 단어입니다.')
+                print(self.guess.starts(enterword))
+                if self.guess.isitin(enterword) == False:
+                    self.myscore -= len(enterword) * 4
+                    self.status.setText('불가능합니다.')
+                    print(self.guess.isitin(enterword))
 
-            elif self.guess.isitin(enterword) == False:
-                self.myscore -= len(enterword) * 4
-                self.status.setText('불가능합니다.')
+            # if self.guess.isitin(enterword) == False:
+            #     self.myscore -= len(enterword) * 4
+            #     self.status.setText('불가능합니다.')
 
-            elif self.guess.botsword(enterword) == False:
+            if self.guess.botsword(enterword) == False:
                 self.myscore -= len(enterword) * 4
                 self.status.setText('존재하지 않는 단어입니다.')
 
-            elif self.gameOver == True:
+            if self.gameOver == True:
                 return self.showword.setText('Game Over')
 
             if len(enterword) > 1:
