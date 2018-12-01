@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTime
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtWidgets import QLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtWidgets import QTextEdit, QLineEdit, QToolButton, QLabel
@@ -156,17 +156,17 @@ class EndtoendGame(QWidget):
         if len(enterword) > 1:
             if self.guess.starts(enterword[0]) == False:
                 self.myscore -= len(enterword) * 4
-                self.gameOver = True
+                # self.gameOver = True
                 self.status.setText('존재하지 않는 단어입니다.')
 
             if self.guess.isitin(enterword) == False:
                 self.myscore -= len(enterword) * 4
-                self.gameOver = True
+                # self.gameOver = True
                 self.status.setText('불가능합니다.')
 
             if self.guess.botsword(enterword) == False:
                 self.myscore -= len(enterword) * 4
-                self.gameOver = True
+                # self.gameOver = True
                 self.status.setText('존재하지 않는 단어입니다.')
 
             if self.gameOver == True:
