@@ -27,6 +27,12 @@ class Guess:
             else:
                 return False
 
+    def useingword(self, character):
+        if character not in self.usedword:
+            return True
+        else:
+            return False
+
     def isitin(self, m):  # 입력한 단어가 단어장에 있는지 확인 하는 메소드 return type : Boolean
         k = m  # 단어가 없으면 False 리턴
         if k in self.words[k[0]]:
@@ -37,9 +43,8 @@ class Guess:
     def botsword(self, charactors):  # 상대(컴퓨터)가 쓸 단어를 선택하는 메소드, 할 수 있는 단어가 없으면 False 리턴
         charactor = charactors[-1]
         if charactor in self.words:
-            number = random.randint(1, len(self.words[charactor]))
+            number = random.randint(1, len(self.words[charactor])-1)
             botword = (self.words[charactor])[number]
-            self.usedword += [self.word[charactor][number]]
             return botword
         elif charactor not in self.words:
             return False
@@ -51,7 +56,6 @@ class Guess:
             if chr(numb) in self.words:
                 randnum = random.randint(0, len(self.words[chr(numb)])-1)
                 if len(self.words[chr(numb)][randnum]) > 1:
-                    self.usedword += [self.word[chr(numb)][randnum]]
                     return self.words[chr(numb)][randnum]
                 else:
                     pass
@@ -61,6 +65,7 @@ class Guess:
     def what_have_we_done(self, wordnow): # 사용자가 컴퓨터가 사용한 단어를 받아와 텍스트로 최대 3개까지 출력
         self.thirdword[2], self.thirdword[1] = self.thirdword[1], self.thirdword[0]
         self.thirdword[0] = wordnow
+        self.usedword.append(wordnow)
         return self.thirdword
 
 # --------------------------------작동 확인 영역----------------------------------

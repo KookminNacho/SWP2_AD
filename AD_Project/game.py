@@ -189,6 +189,8 @@ class EndtoendGame(QWidget):
 
 
     def pressedEnter(self):
+        self.usedword = self.guess.usedword
+        print(self.usedword)
 
         self.settime = self.maxtime
         self.maxtime -= 1
@@ -227,11 +229,23 @@ class EndtoendGame(QWidget):
             #     self.myscore -= len(enterword) * 4
             #     self.status.setText('불가능합니다.')
 
+            elif self.guess.useingword(enterword) == False:
+                self.myscore -= len(enterword) * 4
+                self.status.setText('이미 사용한 단어입니다.')
+                print(5)
+                self.errorcount = True
+
             elif self.guess.botsword(enterword) == False:
                 self.myscore -= len(enterword) * 4
                 self.errorcount = True
                 print(4)
                 self.status.setText('존재하지 않는 단어입니다.')
+
+            elif enterword in self.usedword:
+                self.myscore -= len(enterword) * 4
+                self.errorcount = True
+                print(6)
+                self.status.setText('이미 입력한 단어입니다.')
             # 모든 오류 일어나지 않았을때 실행
             else:
                 self.myscore += len(enterword) * 4
