@@ -9,7 +9,6 @@ import time
 import threading
 
 from guess import Guess
-from timer import Timer
 from endtoend import Endtoend
 
 
