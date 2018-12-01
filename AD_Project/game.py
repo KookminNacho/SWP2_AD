@@ -157,6 +157,7 @@ class EndtoendGame(QWidget):
         self.timer.timeout.connect(self.timeout)
         self.timer.start(1000)
         self.gameStart = False
+        self.enter.setDisabled(False)
 
         self.writeword.setDisabled(True)
         self.character.setText(self.endtoend.text[0])
@@ -189,7 +190,8 @@ class EndtoendGame(QWidget):
     def pressedEnter(self):
 
         self.settime = self.maxtime
-        self.maxtime -= 1
+
+        self.errorcount = False
 
         if self.settime == 0:
             self.gameOver = True
@@ -199,98 +201,51 @@ class EndtoendGame(QWidget):
         whowin = 0
         #returnword = ''
         self.writeword.clear()
-        # self.lastword.setText('이전 단어 : ', str(self.guess.what_have_we_done(enterword)))
 
         # 예외처리
         if len(enterword) > 1:
+            print(1)
+
             if self.guess.starts(enterword[0]) == False:
                 self.myscore -= len(enterword) * 4
-                self.status.setText('존재하지 않는 단어입니다.')
-                print(self.guess.starts(enterword))
-                if self.guess.isitin(enterword) == False:
-                    self.myscore -= len(enterword) * 4
-                    self.status.setText('불가능합니다.')
-                    print(self.guess.isitin(enterword))
+                self.errorcount = True
+                return self.status.setText('존재하지 않는 단어입니다.')
+                # print(self.guess.starts(enterword) + '1')
 
-            # if self.guess.isitin(enterword) == False:
-            #     self.myscore -= len(enterword) * 4
-            #     self.status.setText('불가능합니다.')
+            if self.guess.isitin(enterword) == False:
+                self.myscore -= len(enterword) * 4
+                self.errorcount = True
+                return self.status.setText('불가능합니다.' + '2')
+                # print(self.guess.isitin(enterword))
 
             if self.guess.botsword(enterword) == False:
                 self.myscore -= len(enterword) * 4
-                self.status.setText('존재하지 않는 단어입니다.')
+                self.errorcount = True
+                return self.status.setText('존재하지 않는 단어입니다.')
 
             if self.gameOver == True:
                 return self.showword.setText('Game Over')
 
-            if len(enterword) > 1:
+            if self.errorcount == True:
+                self.maxtime -= 1
+
                 self.myscore += len(enterword) * 4
-            self.myrecord.setText(str(self.myscore))
-            last = self.guess.what_have_we_done(enterword)
-            self.lastword.setText("이전 단어 : "+ ' - '.join(last))
+                self.myrecord.setText(str(self.myscore))
+                last = self.guess.what_have_we_done(enterword)
+                self.lastword.setText("이전 단어 : "+ ' - '.join(last))
 
-            # 컴퓨터가 새로운 단어를 입력
-            self.aiword = self.guess.botsword(enterword)
-            self.showword.setText(self.aiword)
+                # 컴퓨터가 새로운 단어를 입력
+                self.aiword = self.guess.botsword(enterword)
+                self.showword.setText(self.aiword)
 
-            if len(self.aiword) > 1:
                 self.yourscore += len(self.aiword) * 4
 
-            self.guess.what_have_we_done(self.aiword)
+                self.guess.what_have_we_done(self.aiword)
 
-            self.airecord.setText(str(self.yourscore))
-            self.status.setText('당신의 차례입니다.')
+                self.airecord.setText(str(self.yourscore))
+                self.status.setText('당신의 차례입니다.')
         else:
             self.status.setText('공백은 입력할 수 없습니다.')
-
-        # if self.guess.starts(enterword[0]) == False:
-        #     self.myscore -= len(enterword)*4
-        #     self.gameOver = True
-        #     self.status.setText('존재하지 않는 단어입니다.')
-        #
-        # if self.guess.isitin(enterword) == False:
-        #     self.myscore -= len(enterword) * 4
-        #     self.gameOver = True
-        #     self.status.setText('불가능합니다.')
-        #
-        # if self.guess.botsword(enterword) == False:
-        #     self.myscore -= len(enterword) * 4
-        #     self.gameOver = True
-        #     self.status.setText('존재하지 않는 단어입니다.')
-        #
-        # if self.gameOver == True:
-        #     return self.showword.setText('Game Over')
-        #
-        # if len(enterword) > 1:
-        #     self.myscore += len(enterword)*4
-        # self.myrecord.setText(str(self.myscore))
-        # self.guess.what_have_we_done(enterword)
-        #
-        # # 컴퓨터가 새로운 단어를 입력
-        # self.aiword = self.guess.botsword(enterword)
-        # self.showword.setText(self.aiword)
-        #
-        # if len(self.aiword) > 1:
-        #     self.yourscore += len(self.aiword)*4
-        #
-        # self.guess.what_have_we_done(self.aiword)
-        #
-        # self.airecord.setText(str(self.yourscore))
-        # self.status.setText('당신의 차례입니다.')
-
-
-    # # 엔터 입력처리 메서드
-    # def keyPressEvent(self, event):
-    #     if event.key() == Qt.Key_Space:
-    #         print('Enter')
-    #         self.pressedEnter()
-    #     if event.key == Qt.Key_Escape:
-    #         self.close()
-    #
-    # def count1(self):
-    #     self.status.setText(str(self.counter))
-    #     self.counter-=1
-    #     threading.Timer(1,self.count1).start()
 
 
 if __name__ == '__main__':
