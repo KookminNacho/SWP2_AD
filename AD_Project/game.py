@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QTime
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtWidgets import QLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtWidgets import QTextEdit, QLineEdit, QToolButton, QLabel
@@ -9,7 +9,8 @@ import time
 import threading
 
 from guess import Guess
-#from endtoend import Endtoend
+from timer import Timer
+from endtoend import Endtoend
 
 
 class EndtoendGame(QWidget):
@@ -18,10 +19,18 @@ class EndtoendGame(QWidget):
         super().__init__(parent)
         self.guess = Guess()
         self.guess.test()
-        #self.endtoend = Endtoend()
+        self.endtoend = Endtoend()
+        self.gameStart = False
 
         self.setGeometry(300, 300, 500, 400)
         self.setWindowTitle('End-TO-End')
+
+        # Timer
+        self.settime = 15
+        self.maxtime = 15
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timeout)
+        self.timer.start(1000)
 
         # label
 
@@ -70,7 +79,7 @@ class EndtoendGame(QWidget):
         # QTextEdit
         self.character = QTextEdit()
         self.character.setReadOnly(True)
-        self.character.setText('')
+        self.character.setText(self.endtoend.text[0])
 
         # Button newGame
         self.newGame = QToolButton()
@@ -121,61 +130,89 @@ class EndtoendGame(QWidget):
         self.setLayout(vbox)
         self.startGame()
 
+    def timeout(self):
+        self.settime -= 1
+        self.status.setText(str(self.settime))
+
+        if self.settime == 0 and self.gameStart == False:
+            self.settime = 15
+            self.gameStart = True
+            self.writeword.setDisabled(False)
+        elif self.settime == 0 and self.gameStart == True:
+            self.gameOver = True
+            self.timer = None
+            self.status.setText('Time Over')
+            self.showword.setText(self.guess.botsword(self.firstword))
+            self.enter.setDisabled(True)
+
+
 
     def startGame(self):
-        firstword = self.guess.game_start()
+        self.writeword.setDisabled(True)
+        self.character.setText(self.endtoend.text[0])
+        self.settime = 4
+        self.firstword = self.guess.game_start()
         self.gameOver = False
         #self.character.setText(self.)
         self.counter = 3
         self.myscore = 0
         self.yourscore = 0
 
+
+        # 처음 시작할시 컴퓨터가 단어를 제시하도록 하는 부분
+        self.showword.setText(self.firstword)
+        self.guess.what_have_we_done(self.firstword)
+
+        if len(self.firstword) > 1:
+            self.yourscore += len(self.firstword) * 4
+
+        self.airecord.setText(str(self.yourscore))
+        self.writeword.clear()
+
         self.myrecord.setText(str(self.myscore))
         self.airecord.setText(str(self.yourscore))
 
         self.status.setText('게임을 시작합니다.')
 
-        # 처음 시작할시 컴퓨터가 단어를 제시하도록 하는 부분
-        self.showword.setText(firstword)
-        self.guess.what_have_we_done(firstword)
 
-        if len(firstword) > 1:
-            self.yourscore += len(firstword)*4
-
-        self.airecord.setText(str(self.yourscore))
-        self.writeword.clear()
 
     def pressedEnter(self):
+
+        self.settime = self.maxtime
+        self.maxtime -= 1
+
+        if self.settime == 0:
+            self.gameOver = True
+            self.status.setText('Time Over')
+
         enterword = self.writeword.text()
         whowin = 0
         #returnword = ''
         self.writeword.clear()
-        #self.lastword.setText('이전 단어 : ', thirdword[0], thirdword[1], thirdword[2])
+        # self.lastword.setText('이전 단어 : ', str(self.guess.what_have_we_done(enterword)))
 
         # 예외처리
         if len(enterword) > 1:
             if self.guess.starts(enterword[0]) == False:
                 self.myscore -= len(enterword) * 4
-                # self.gameOver = True
                 self.status.setText('존재하지 않는 단어입니다.')
 
-            if self.guess.isitin(enterword) == False:
+            elif self.guess.isitin(enterword) == False:
                 self.myscore -= len(enterword) * 4
-                # self.gameOver = True
                 self.status.setText('불가능합니다.')
 
-            if self.guess.botsword(enterword) == False:
+            elif self.guess.botsword(enterword) == False:
                 self.myscore -= len(enterword) * 4
-                # self.gameOver = True
                 self.status.setText('존재하지 않는 단어입니다.')
 
-            if self.gameOver == True:
+            elif self.gameOver == True:
                 return self.showword.setText('Game Over')
 
             if len(enterword) > 1:
                 self.myscore += len(enterword) * 4
             self.myrecord.setText(str(self.myscore))
-            self.guess.what_have_we_done(enterword)
+            last = self.guess.what_have_we_done(enterword)
+            self.lastword.setText("이전 단어 : "+ ' - '.join(last))
 
             # 컴퓨터가 새로운 단어를 입력
             self.aiword = self.guess.botsword(enterword)
@@ -247,4 +284,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     game = EndtoendGame()
     game.show()
+    # timer = Timer()
+    # timer.show()
     sys.exit(app.exec_())
