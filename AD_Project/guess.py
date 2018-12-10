@@ -56,7 +56,8 @@ class Guess:
             if chr(numb) in self.words:
                 randnum = random.randint(0, len(self.words[chr(numb)])-1)
                 if len(self.words[chr(numb)][randnum]) > 1:
-                    return self.words[chr(numb)][randnum]
+                    wordx = self.words[chr(numb)][randnum]
+                    return wordx
                 else:
                     pass
             else:
@@ -70,7 +71,8 @@ class Guess:
 
 # --------------------------------작동 확인 영역----------------------------------
 
-B = Guess()
+B = Guess( )
+
 
 B.test()
 
