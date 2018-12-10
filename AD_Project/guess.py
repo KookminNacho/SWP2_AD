@@ -11,21 +11,9 @@ class Guess:
         self.words = {}  # 단어 dict
         self.thirdword = ['', '', '']
         self.usedword = []
+
     def test(self):
         self.words = self.word.readingdb()
-
-    def starts(self, charactor):  # dict 안에 해당되는 key 값(charactor)이 있는지 확인하는 메소드 return type 단어장에 있는
-        # 단어를 파악하는 것이 아닌 해당 단어로 시작하는 단어를 가져온다
-        wordex = []
-        if len(charactor) < 1:
-            pass
-        else:
-            if charactor[0] in self.words:
-                for i in range(10):
-                    wordex += [(self.words[charactor][i])]
-                return wordex
-            else:
-                return False
 
     def useingword(self, character):
         if character not in self.usedword:
@@ -78,14 +66,7 @@ B.test()
 
 testword = "가가린"
 print("시작 단어: ", B.game_start())
-success = B.starts('가')
 seccscs = B.isitin(testword)
-
-starttest = B.starts("가")
-if not starttest:
-    print("단어가 없습니다.")
-else:
-    pass
 
 if seccscs is False:
     print("seccscs: 불가능 ㅠ")
@@ -93,10 +74,6 @@ if seccscs is False:
 else:
     print("isitin 메소드:", testword)
 
-if not success:
-    print("success: 불가능 ㅠ")
-else:
-    print("success: 가능")
 
 BOTTEST = B.botsword('군견')
 if BOTTEST is False:

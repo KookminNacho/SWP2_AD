@@ -219,11 +219,8 @@ class EndtoendGame(QWidget):
         if len(enterword) > 1:
             print(1)
             # 예외처리
-            if self.guess.starts(enterword[0]) == False:
-                self.status.setText('존재하지 않는 단어입니다.')
-                print(2)
 
-            elif self.guess.isitin(enterword) == False:
+            if self.guess.isitin(enterword) == False:
                 self.status.setText('불가능합니다.' + '2')
                 print(3)
 
@@ -238,6 +235,9 @@ class EndtoendGame(QWidget):
             elif enterword in self.usedword:
                 print(6)
                 self.status.setText('이미 입력한 단어입니다.')
+
+            elif self.showword.Text()[-1] != enterword[0]:
+                self.status.setText("잘못된 입력입니다.")
 
             # 모든 오류 일어나지 않았을때 실행
             else:
