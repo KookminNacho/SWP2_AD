@@ -80,6 +80,10 @@ class EndtoendGame(QWidget):
         # QTextEdit
         self.character = QTextEdit()
         self.character.setReadOnly(True)
+        self.character.setAlignment(Qt.AlignLeft)
+        font6 = self.character.font()
+        font6.setFamily('Courier New')
+        self.character.setFont(font6)
         self.character.setText(self.endtoend.text[0])
 
         # Button newGame
@@ -236,7 +240,7 @@ class EndtoendGame(QWidget):
                 print(6)
                 self.status.setText('이미 입력한 단어입니다.')
 
-            elif self.showword.Text()[-1] != enterword[0]:
+            elif self.showword.text()[-1] != enterword[0]:
                 self.status.setText("잘못된 입력입니다.")
 
             # 모든 오류 일어나지 않았을때 실행
